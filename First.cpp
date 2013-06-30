@@ -1,28 +1,42 @@
-#include "GL/glut.h"
+#include "GL/freeglut.h"
 #include "GL/gl.h"
+
 #include <iostream>
 
+int CurrentWidth = 640;
+int CurrentHeight = 480;
+
+void reshapeFunction(int Width, int Height) {
+  CurrentWidth = Width;
+  CurrentHeight = Height;
+  glViewport(0, 0, CurrentWidth, CurrentHeight);
+}
+
 void renderFunction() {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT);
-  glColor3f(1.0, 1.0, 1.0);
-  glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-  glBegin(GL_POLYGON);
-    glVertex2f(-0.5, -0.5);
-    glVertex2f(-0.5, 0.5);
-    glVertex2f(0.5, 0.5);
-    glVertex2f(0.5, -0.5);
-  glEnd();
-  glFlush();
-  std::cerr << "Hello\n";
+  glutSwapBuffers();
+  glutPostRedisplay();
 }
 
 int main(int argc, char **argv) {
+
   glutInit(&argc, argv);
+  glutInitContextVersion(3, 3);
+  glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
+  glutInitContextProfile(GLUT_CORE_PROFILE);
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+
   glutInitDisplayMode(GLUT_SINGLE);
-  glutInitWindowSize(500, 500);
+  glutInitWindowSize(CurrentWidth, CurrentHeight);
   glutInitWindowPosition(100, 100);
-  glutCreateWindow("OpenGL - First window demo");
+  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+  int WindowHandle = glutCreateWindow("OpenGL - First window demo");
+  if (WindowHandle < 1)
+    return 1;
+  std::cerr << glGetString(GL_VERSION) << "\n";
+
+  glClearColor(1.0, 0.0, 0.0, 0.0);
+  glutReshapeFunc(reshapeFunction);
   glutDisplayFunc(renderFunction);
   glutMainLoop();
   return 0;
