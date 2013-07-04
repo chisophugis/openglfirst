@@ -46,15 +46,20 @@ void timerFunction(int Value) {
   glutSetWindowTitle(S.str().c_str());
 }
 
+void myErrorCallback(GLenum _source, GLenum _type, GLuint _id, GLenum _severity,
+                     GLsizei _length, const char *_message, void *_userParam) {
+  std::cerr << _message << "\n";
+}
+
 int main(int argc, char **argv) {
 
   glutInit(&argc, argv);
-  glutInitContextVersion(3, 3);
-  glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
+  // For some reason, this causes ARB_debug_output to not be enabled:
+  // glutInitContextVersion(3, 3);
+  glutInitContextFlags(GLUT_DEBUG);
   glutInitContextProfile(GLUT_CORE_PROFILE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
-  glutInitDisplayMode(GLUT_SINGLE);
   glutInitWindowSize(CurrentWidth, CurrentHeight);
   glutInitWindowPosition(100, 100);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -74,6 +79,11 @@ int main(int argc, char **argv) {
   glutDisplayFunc(renderFunction);
   glutIdleFunc(idleFunction);
   glutTimerFunc(0, timerFunction, TF_InitialCall);
+  // See ARB_debug_output. This means that you don't have to constantly be
+  // checking glGetError().
+  glDebugMessageCallbackARB(myErrorCallback, NULL);
+  // Cause a GL_INVALID_ENUM error:
+  // glEnable(723932423);
   glutMainLoop();
   return 0;
 }
