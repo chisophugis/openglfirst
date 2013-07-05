@@ -136,6 +136,10 @@ void createVertexBufferObject() {
   glGenVertexArrays(1, &VAOID);
   glBindVertexArray(VAOID);
 
+  // EXT_direct_state_access could simplify this a bit.
+  // In this case, e.g. VertexArrayVertexAttribOffsetEXT
+  // (instead of VertexAttribPointer) and EnableVertexArrayAttribEXT
+  // (instead of glEnableVertexAttribArray).
   glGenBuffers(1, &VBOID);
   glBindBuffer(GL_ARRAY_BUFFER, VBOID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), &Vertices, GL_STATIC_DRAW);
