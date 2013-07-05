@@ -115,18 +115,14 @@ void destroyShaders() {
 
 GLuint VAOID;
 GLuint VBOID;
-GLuint ColorBufferID;
+struct Vertex {
+  GLfloat XYZW[4];
+  GLfloat RGBA[4];
+};
 void createVertexBufferObject() {
-  GLfloat Vertices[] = {
-    -0.8f, -0.8f, 0.0f, 1.0f,
-    0.0f, 0.8f, 0.0f, 1.0f,
-    0.8f, -0.8f, 0.0f, 1.0f
-  };
-  GLfloat Colors[] = {
-    1.0f, 0.0f, 0.0f, 1.0f,
-    0.0f, 1.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 1.0f, 1.0f
-  };
+  Vertex Vertices[] = {{{-0.8f, -0.8f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+                       {{0.0f, 0.8f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+                       {{0.8f, -0.8f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}};
 
   glGenVertexArrays(1, &VAOID);
   glBindVertexArray(VAOID);
@@ -134,13 +130,11 @@ void createVertexBufferObject() {
   glGenBuffers(1, &VBOID);
   glBindBuffer(GL_ARRAY_BUFFER, VBOID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), &Vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        (GLvoid *)offsetof(Vertex, RGBA));
 
-  glGenBuffers(1, &ColorBufferID);
-  glBindBuffer(GL_ARRAY_BUFFER, ColorBufferID);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Colors), &Colors, GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
 }
 
@@ -148,7 +142,6 @@ void destroyVertexBufferObject() {
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glDeleteBuffers(1, &ColorBufferID);
   glDeleteBuffers(1, &VBOID);
   glBindVertexArray(0);
   glDeleteVertexArrays(1, &VAOID);
