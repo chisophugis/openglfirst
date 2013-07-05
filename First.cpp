@@ -43,7 +43,7 @@ void reshapeFunction(int Width, int Height) {
 void renderFunction() {
   ++FrameCount;
   glClear(GL_COLOR_BUFFER_BIT);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
   glutSwapBuffers();
 }
@@ -130,7 +130,8 @@ GLvoid *offsetOfAsPtr(MemberTy StructTy::*MemberPtr) {
 void createVertexBufferObject() {
   Vertex Vertices[] = {{{-0.8f, -0.8f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
                        {{0.0f, 0.8f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-                       {{0.8f, -0.8f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}};
+                       {{0.8f, -0.8f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+                       {{0.8f, 0.8f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}}};
 
   glGenVertexArrays(1, &VAOID);
   glBindVertexArray(VAOID);
