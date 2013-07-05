@@ -119,6 +119,14 @@ struct Vertex {
   GLfloat XYZW[4];
   GLfloat RGBA[4];
 };
+
+template <typename T> T *typedNullptr() { return static_cast<T *>(nullptr); }
+
+template <typename MemberTy, typename StructTy>
+GLvoid *offsetOfAsPtr(MemberTy StructTy::*MemberPtr) {
+  return std::addressof(typedNullptr<StructTy>()->*MemberPtr);
+}
+
 void createVertexBufferObject() {
   Vertex Vertices[] = {{{-0.8f, -0.8f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
                        {{0.0f, 0.8f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
@@ -132,7 +140,7 @@ void createVertexBufferObject() {
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), &Vertices, GL_STATIC_DRAW);
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (GLvoid *)offsetof(Vertex, RGBA));
+                        offsetOfAsPtr(&Vertex::RGBA));
 
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
