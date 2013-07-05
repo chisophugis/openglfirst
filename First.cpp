@@ -139,7 +139,8 @@ void createVertexBufferObject() {
   glGenBuffers(1, &VBOID);
   glBindBuffer(GL_ARRAY_BUFFER, VBOID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), &Vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        offsetOfAsPtr(&Vertex::XYZW));
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                         offsetOfAsPtr(&Vertex::RGBA));
 
